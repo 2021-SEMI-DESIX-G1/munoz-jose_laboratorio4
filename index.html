@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {font-family:sans-serif;
+        /*background-color:#ffd166*/;
+              
+              }
+        .container{display:flex;
+        flex-direction:column;
+        align-items: center;}
+        h1{
+            text-align:center;
+        }
+        .btn-calcular{
+            border: 2px #4CAF50 solid;
+            transition-duration: 0.4s;
+            padding: 10px 10px;
+            font-size:16px;
+            font-weight:bold;
+            width: 100px;
+            margin: 10px;
+            display: inline-block;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn-calcular:hover{
+            background: #4CAF50;
+            color:white;
+
+        }
+        form{
+            padding: 15px;
+            width:  400px;
+            border: 2px solid #4CAF50;
+        }
+        .respuesta{
+            color:#4CAF50;
+            font-size:16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>Laboratorio No.4<br>
+        Problemas de Aplicación usando JS con HTML</h1>
+    <h2>Problema 1 - Palíndromos</h2>
+    <form id="problema01-form" action="#">
+        <p>Ingrese una cadena.</p>
+        <label for="problema01-cadena">cadena =</label>
+        <input id="problema01-cadena" name="problema01-cadena" type="text"><br>
+        <input class="btn-calcular" type="submit" value="Calcular">
+    </form>
+    <p class="respuesta" id="problema01-resultado"></p>
+    <br>
+    <h2>Problema 2 - Caracteres</h2>
+    <form id="problema02-form" action="#">
+        <p>Ingrese una cadena.</p>
+        <label for="problema02-cadena">cadena =</label>
+        <input id="problema02-cadena" name="problema02-cadena" type="text"><br>
+        <input class="btn-calcular" type="submit" value="Calcular">
+    </form>
+    <p class="respuesta" id="problema02-resultado"></p>
+    <br>
+    <h2>Problema 3 - Año Bisiesto</h2>
+    <form  id="problema03-form" action="#">
+        <p>Ingrese una año.</p>
+        <label for="problema03-ano">año =</label>
+        <input id="problema03-ano" name="problema03-ano" type="text"><br>
+        <input class="btn-calcular" type="submit" value="Calcular">
+    </form>
+    <p  class="respuesta" id="problema03-resultado"></p>
+    <br>
+    <h2>Problema 4 - Sumatoria de Números Primos</h2>
+    <form id="problema04-form" action="#">
+        <p>Ingrese un número.</p>
+        <label for="problema04-numero">numero =</label>
+        <input id="problema04-numero" name="problema04-numero" type="text"><br>
+        <input class="btn-calcular" type="submit" value="Calcular">
+    </form>
+    <p class="respuesta" id="problema04-resultado"></p>
+    <script>
+        ( ()=>{
+            const App = {
+                htmlElements: {
+                    problema01Form: document.getElementById('problema01-form'),
+                    problema01Cadena: document.getElementById('problema01-cadena'),
+                    problema01Resultado: document.getElementById('problema01-resultado'),
+
+                    problema02Form: document.getElementById('problema02-form'),
+                    problema02Cadena: document.getElementById('problema02-cadena'),
+                    problema02Resultado: document.getElementById('problema02-resultado'),
+
+                    problema03Form: document.getElementById('problema03-form'),
+                    problema03Ano: document.getElementById('problema03-ano'),
+                    problema03Resultado: document.getElementById('problema03-resultado'),
+
+                    problema04Form: document.getElementById('problema04-form'),
+                    problema04Numero: document.getElementById('problema04-numero'),
+                    problema04Resultado: document.getElementById('problema04-resultado')
+                },
+                init: () => {
+                    App.bindEvents();
+                },
+                bindEvents: () => {
+                    App.htmlElements.problema01Form.addEventListener('submit', App.events.onProblema01FormSubmit);
+                    App.htmlElements.problema02Form.addEventListener('submit', App.events.onProblema02FormSubmit );
+                    App.htmlElements.problema03Form.addEventListener('submit', App.events.onProblema03FormSubmit);
+                    App.htmlElements.problema04Form.addEventListener('submit', App.events.onProblema04FormSubmit);
+                    
+                },
+                events: {
+                    onProblema01FormSubmit: (event)=>{
+                        event.preventDefault();
+                        const problema01Cadena = App.htmlElements.problema01Cadena.value;
+                        const resultado01 = App.utils.obtenerTipoCadena(problema01Cadena)
+                        const textoResultado01 = `Respuesta: ${resultado01}`;
+                        App.htmlElements.problema01Resultado.innerText = textoResultado01;
+                    },
+                    onProblema02FormSubmit: (event)=>{
+                        event.preventDefault();
+                        const problema02Cadena = App.htmlElements.problema02Cadena.value;
+                        const resultado02 = JSON.stringify(App.utils.contarLetras(problema02Cadena));
+                        const textoResultado02 = `Respuesta: ${resultado02}`;
+                        App.htmlElements.problema02Resultado.innerText = textoResultado02;
+
+
+                    },
+                    onProblema03FormSubmit: (event)=>{
+                        event.preventDefault();
+                        const problema03Ano = App.htmlElements.problema03Ano.value;
+                        const resultado03 = App.utils.obtenerBisiesto(problema03Ano);
+                        const textoResultado03 = `Respuesta: ${resultado03}`;
+                        App.htmlElements.problema03Resultado.innerText = textoResultado03;
+                    },
+                    onProblema04FormSubmit: (event)=>{
+                        event.preventDefault();
+                        const problema04Numero = App.htmlElements.problema04Numero.value;
+                        const resultado04 = App.utils.obtenerSumatoriaPrimos(problema04Numero);
+                        const textoResultado04 = `Respuesta: ${resultado04}`;
+                        App.htmlElements.problema04Resultado.innerText = textoResultado04;
+                        
+                    }
+                },
+                utils: {
+                    verificarPalindromo: (cadena) => {
+
+                        let acumulador =0;
+                        let tipo='';
+
+                        for(let i=0;i<cadena.length;i++){
+                            let cd = cadena.charAt(i);
+                            let ci = cadena.charAt(cadena.length-i-1);
+
+                        if(ci ==cd){
+                            acumulador +=1;
+                        }
+                    }
+
+                        if(acumulador === cadena.length){
+                            tipo = 'Palindromo';
+                        }else{
+                            tipo = 'No es Palindromo';
+                        }
+
+ 
+                        return tipo;
+
+                    },
+
+                    obtenerBinario: (numero)=>{
+
+                        
+                        let binario = '';
+                        let residuo =0;
+
+                        while(numero>0){
+                            residuo=numero%2;
+                            binario=binario + String(residuo);
+                            numero=Math.floor(numero/2);
+
+                        }
+                        return binario;
+
+                    },
+
+                    obtenerTipoCadena: (_cadena)=> {
+
+                        tipoCadena = '';
+                        tipoCadena = App.utils.verificarPalindromo(_cadena);
+
+                        if(tipoCadena === 'Palindromo'){
+
+                            numeroBinario = App.utils.obtenerBinario(parseInt(_cadena));
+
+                            tipoBinario = App.utils.verificarPalindromo(numeroBinario); 
+
+                            if (tipoBinario === 'Palindromo'){
+                                tipoCadena = 'Palindromo de doble base';
+                                return tipoCadena;
+                                
+                            }
+                            else {
+                                tipoCadena = 'Palindromo';
+                                return tipoCadena;
+                            
+                            }
+
+                        } 
+                        else {
+                            return tipoCadena;
+                        }
+
+                    },
+                    contarLetras: (_cadena)=>{
+                        let caracteres = {};
+                        for(let i=0; i<_cadena.length;i++){
+                            if(caracteres[_cadena[i]]){
+                                caracteres[_cadena[i]]++;
+                            } else{
+                                caracteres[_cadena[i]] = 1;
+                            }
+                        }
+                       
+                        return caracteres;
+
+                     },
+                     obtenerBisiesto: (anio)=> {
+
+                        tipoAnio = '';
+
+                        if ((anio % 4) === 0){
+                            tipoAnio = 'Bisiesto';
+                        }else {
+                            tipoAnio = 'No Bisiesto';
+                        }
+
+                        return tipoAnio;
+
+                     },
+                     obtenerSumatoriaPrimos: (numero)=>{
+
+                        let sumatoria = 0;
+   
+
+                        for(let num=0; num<=numero; num++){
+
+                            let x = 0;
+                            let contador = 0;
+                            while(x<=num){
+                                if(num % x == 0){
+                                    contador += 1;
+                                }
+                                x +=  1;
+                            }
+                            if(contador == 2 | num == 1){
+                                
+                                sumatoria += num;
+                            }  
+
+                        }
+                        return sumatoria;
+
+                     }
+                }
+
+            }
+
+            App.init();
+
+        })();
+    </script>
+    </div>
+</body>
+</html>
